@@ -6,72 +6,63 @@ if ($_SESSION["valida"] == false) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-        <title>Gestion Tutores</title>
-        <link rel="stylesheet" type="text/css" href="css/tarea1.css">
-            <script type="text/javascript" src="js/zxml.js"></script>
-            <script type="text/javascript">
-                var realizar = 0;
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Guarda datos del tutor</title>
 
-                function sendRequest() {
-                    var oForm = document.forms[0];
-                    var sBody = getRequestBody(oForm);
-                    var oXmlHttp = zXmlHttp.createRequest();
-                    oXmlHttp.open("post", oForm.action, true);
-                    oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+<script type="text/javascript">
 
-                    oXmlHttp.onreadystatechange = function () {
-                        if (oXmlHttp.readyState == 4) {
-                            if (oXmlHttp.status == 200) {
-                                saveResult(oXmlHttp.responseText);
+	var oIFrame = null;
+	
+	function createIframe(){
+		var oIFrameElement = document.createElement("iframe");
+		oIFrameElement.width = 0;
+		oIFrameElement.height = 0;
+		oIFrameElement.frameBorder = 0;
+		oIFrameElement.name = "hiddenFrame";
+		oIFrameElement.id = "hiddenFrame";
+		document.body.appendChild(oIFrameElement);
+		
+		oIFrame = frames["hiddenFrame"];
+		
+	}
+	
+	function checkIframe(){
 
-                            } else {
-                                saveResult("Ocurrio un error: " + oXmlHttp.statusText)
-                            }
-                        }
-                    };
-                    oXmlHttp.send(sBody);
-                }
+		if(!oIFrame){
+			createIframe();			
+		}
+		setTimeout(oIFrame.location = "ProxyForm.html",10);
+	}
+	
+	function formReady(){
+		var oHiddenForm = oIFrame.document.forms[0];
+		var oForm = document.forms[0];
+		
+		for(var i=0; i<oForm.elements.length; i++){
+			var oHidden = oIFrame.document.createElement("input");
+			oHidden.type = "hidden";
+			oHidden.name = oForm.elements[i].name;
+			oHidden.value = oForm.elements[i].value;
+			oHiddenForm.appendChild(oHidden);			
+		}
+		
+		oHiddenForm.action = oForm.action;
+		oHiddenForm.submit();
+	}
+	
+	function saveResult(sMessage){
+		var divStatus = document.getElementById("divStatus");
+		divStatus.innerHTML = sMessage;
+	}
 
-                function getRequestBody(oForm) {
-                    //funcion que devuelve una cadena de consulta
-                    var aParams = new Array();
-                    for (var i = 0; i < oForm.elements.length; i++) {
-                        var sParam = encodeURIComponent(oForm.elements[i].name);
-                        sParam += "=";
-                        sParam += encodeURIComponent(oForm.elements[i].value);
-                        aParams.push(sParam);
-                    }
-                    sParam = encodeURIComponent("realizar");
-                    sParam += "=";
-                    sParam += encodeURIComponent(realizar.toString());
-                    aParams.push(sParam);
-                    return aParams.join("&");
-                }
 
-                function saveResult(sMensaje) {
 
-                    if (realizar == 2) {
-                        str = sMensaje.split(",");
-
-                        var inputs = document.getElementsByClassName("esp");
-
-                        for (i = 1; i < 6; i++) {
-                            inputs[i].value = str[i];
-                        }
-                        var divStatus = document.getElementById("divStatus");
-                        divStatus.innerHTML = str[6];
-                    } else {
-                        var divStatus = document.getElementById("divStatus");
-                        divStatus.innerHTML = sMensaje;
-                    }
-
-                }
-
-                function habilitarCamposAlta() {
-                    realizar = 1;
-                    elementos = document.forms[0];
+	function habilitarCamposAlta(){
+		inputs = document.getElementById("accion");
+                    
+                        inputs.value = 1;
+        elementos = document.forms[0];
                     for (i = 0; i < elementos.length; i++) {
                         elementos[i].disabled = false;
 
@@ -80,12 +71,17 @@ if ($_SESSION["valida"] == false) {
                     for (i = 0; i < 6; i++) {
                         inputs[i].value = "";
                     }
+
                     var divStatus = document.getElementById("divStatus");
-                    divStatus.innerHTML = "";
-                }
-                function habilitarCamposConsulta() {
-                    realizar = 2;
-                    elementos = document.getElementsByClassName("esp");
+                    divStatus.innerHTML = "";    
+	}
+
+	function habilitarCamposConsulta(){
+		inputs = document.getElementById("accion");
+                    
+        inputs.value = 2;
+
+		elementos = document.getElementsByClassName("esp");
                     for (i = 0; i < elementos.length; i++) {
                         elementos[i].disabled = true;
                     }
@@ -100,11 +96,14 @@ if ($_SESSION["valida"] == false) {
 
                     }
                     var divStatus = document.getElementById("divStatus");
-                    divStatus.innerHTML = "";
-                }
+                    divStatus.innerHTML = "";                        
+	}
 
-                function habilitarCamposBaja() {
-                    realizar = 3;
+	function habilitarCamposBaja() {
+		inputs = document.getElementById("accion");
+                    
+        inputs.value = 4;
+                 
                     elementos = document.getElementsByClassName("esp");
                     for (i = 0; i < elementos.length; i++) {
                         elementos[i].disabled = true;
@@ -124,7 +123,11 @@ if ($_SESSION["valida"] == false) {
                     divStatus.innerHTML = "";
                 }
 
-                function habilitarCamposModificaciones() {
+	function habilitarCamposModificaciones() {
+
+		inputs = document.getElementById("accion");
+                    
+        inputs.value = 3;
                     var divStatus = document.getElementById("divStatus");
                     divStatus.innerHTML = "";
                     realizar = 4;
@@ -141,22 +144,26 @@ if ($_SESSION["valida"] == false) {
                     
                     
 
-                }
-            </script>
-    </head>
+                }                
+	
+</script>
 
-    <body>
-        <form action="manejarTutores.php" method="post" onsubmit="sendRequest();
-                return false">
-            <table id="formulario">
+</head>
+
+<body>
+<form action="ControladorTutor.php" method="post" onsubmit="checkIframe(); return false" >
+		<table id="formulario">
                 <tbody>
-                    <tr><td colspan="4"> <h1>Entrada a la Aplicacion</h1></td></tr>
+                    <tr><td colspan="4"> <h1>Gestión de tutores</h1></td></tr>
                     <tr>
                         <td><input type="button" value="Altas" onclick="habilitarCamposAlta()"/></td>
                         <td><input type="button" value="Consultas" onclick="habilitarCamposConsulta()"/></td>
                         <td><input type="button" value="Modificaciones" onclick="habilitarCamposModificaciones()" /></td>
                         <td><input type="button" value="Bajas" onclick="habilitarCamposBaja()"/></td>
                     </tr>
+
+                    <input id="accion" name="accion" type="hidden"></input>
+
 
                     <tr><td colspan="2"><label>Clave Profesor:</label></td><td colspan="2"><input name="clave" class="esp" type="number" disabled required/></td></tr>
                     <tr><td colspan="2"><label>Apellido Paterno:</label></td><td colspan="2"><input name="aP" class="esp" type="text" disabled required/></td></tr>
@@ -177,10 +184,9 @@ if ($_SESSION["valida"] == false) {
                     <tr><td><input type="submit" value="Enviar" name="btnEnviar" disabled /></td></tr>
                 </tbody>
             </table>
-        </form>
-        <div id="divStatus"></div>
-    </body>
+</form>
+
+<div id="divStatus"></div>
+
+</body>
 </html>
-
-
-

@@ -24,7 +24,7 @@ if ($_SESSION["valida"] == false) {
         }
 
         function gestionTutores() {
-            window.location = "gestorTutor/Agregar.html";
+            window.location = "GestorTutor.php";
         }
         function cerrarSesion() {
             window.location = "login.php";
