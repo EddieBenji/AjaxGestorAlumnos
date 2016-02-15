@@ -18,7 +18,7 @@ $sStatus = "";
 $sDBServer = "localhost";
 $sDBName = "bdtarea1ajax";
 $sDBUsername = "root";
-$sDBPassword = "root";
+$sDBPassword = "";
 
 $oLink = mysqli_connect($sDBServer, $sDBUsername, $sDBPassword, $sDBName);
 

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Eliminar datos de tutor</title>
+<script type="text/javascript">
+
+	var oIFrame = null;
+	
+	function createIframe(){
+		var oIFrameElement = document.createElement("iframe");
+		oIFrameElement.width = 0;
+		oIFrameElement.height = 0;
+		oIFrameElement.frameBorder = 0;
+		oIFrameElement.name = "hiddenFrame";
+		oIFrameElement.id = "hiddenFrame";
+		document.body.appendChild(oIFrameElement);
+		
+		oIFrame = frames["hiddenFrame"];
+		
+	}
+	
+	function checkIframe(){
+		if(!oIFrame){
+			createIframe();			
+		}
+		setTimeout(oIFrame.location = "ProxyForm.html",10);
+	}
+	
+	function formReady(){
+		var oHiddenForm = oIFrame.document.forms[0];
+		var oForm = document.forms[0];
+		
+		for(var i=0; i<oForm.elements.length; i++){
+			var oHidden = oIFrame.document.createElement("input");
+			oHidden.type = "hidden";
+			oHidden.name = oForm.elements[i].name;
+			oHidden.value = oForm.elements[i].value;
+			oHiddenForm.appendChild(oHidden);			
+		}
+		
+		oHiddenForm.action = oForm.action;
+		oHiddenForm.submit();
+	}
+	
+	function saveResult(sMessage){
+		var divStatus = document.getElementById("divStatus");
+		divStatus.innerHTML = "Requerimiento completado: " + sMessage;
+	}
+	function habilitarCamposModificaciones() {
+                    var divStatus = document.getElementById("divStatus");
+                    divStatus.innerHTML = "";
+                    realizar = 4;
+                    elementos = document.forms[0];
+                    for (i = 0; i < elementos.length; i++) {
+                        elementos[i].disabled = false;
+                    }
+                    inputs = document.getElementsByClassName("esp");
+                    for (i = 0; i < 6; i++) {
+                        inputs[i].value = "";
+
+                    }
+                    
+                    
+                    
+
+                }
+                
+</script>
+
+</head>
+
+<body>
+<form action="EliminarTutor.php" method="post" onsubmit="checkIframe(); return false" >
+		<table id="formulario">
+                <tbody>
+                    <tr><td colspan="4"> <h1>Menú</h1></td></tr>
+                    <tr>
+                        <td><a type="button"href="Agregar.html">Dar de alta</a></td>
+                        <td><a type="button"href="Editar.html">Modificar</a></td>
+                        <td><a type="button"href="Consultar.html">Consultar</a></td>
+                        <td><a type="button"href="Eliminar.html">Eliminar</a></td>
+                    </tr>
+
+                    <tr><td colspan="2"><label>Clave Profesor:</label></td><td colspan="2"><input name="clave" class="esp" type="number"  required/></td></tr>
+                    
+                    <tr><td><input type="submit" value="Eliminar" name="btnEnviar" /></td></tr>
+                </tbody>
+            </table>
+</form>
+
+<div id="divStatus"></div>
+
+</body>
+</html>
